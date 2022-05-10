@@ -2740,6 +2740,59 @@ class PlayState extends MusicBeatState
 				if(Math.isNaN(value) || value < 1) value = 1;
 				gfSpeed = value;
 
+			case 'Blammed Lights Special':
+				stopLights = true;
+				var color:Int = 0xffffffff;
+				var lightId:Int = FlxG.random.int(1, 5, [curLightEvent]);
+				switch(lightId) {
+					case 1: //Blue
+						color = 0xff31a2fd;
+					case 2: //Green
+						color = 0xff31fd8c;
+					case 3: //Pink
+						color = 0xfff794f7;
+					case 4: //Red
+						color = 0xfff96d63;
+					case 5: //Orange
+						color = 0xfffba633;
+				}
+
+				for (spr in members)
+				{
+					if(spr != null /*&& spr.cameras.contains(camGame)*/ && Std.isOfType(spr, FlxSprite))
+					{
+						// ridiculous
+						Reflect.setProperty(spr, 'color', color);
+					}
+				}
+
+				for (note in notes)
+				{
+					if(note != null)
+						note.color = color;
+				}
+				for (note in unspawnNotes)
+				{
+					if(note != null)
+						note.color = color;
+				}
+				for (note in strumLineNotes)
+				{
+					if(note != null)
+						note.color = color;
+				}
+				curLightEvent = lightId;
+				
+				if(curStage == 'philly') {
+					if(phillyCityLightsEvent != null) {
+						phillyCityLightsEvent.forEach(function(spr:BGSprite) {
+							spr.visible = false;
+						});
+						phillyCityLightsEvent.members[lightId - 1].visible = true;
+						phillyCityLightsEvent.members[lightId - 1].alpha = 1;
+					}
+				}
+
 			case 'Blammed Lights':
 				var lightId:Int = Std.parseInt(value1);
 				if(Math.isNaN(lightId)) lightId = 0;
@@ -3869,6 +3922,7 @@ class PlayState extends MusicBeatState
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
+			triggerEventNote('Blammed Lights Special', '', '');
 		}
 	}
 
@@ -3978,6 +4032,7 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
+				triggerEventNote('Blammed Lights Special', '', '');
 			}
 		}
 	}
