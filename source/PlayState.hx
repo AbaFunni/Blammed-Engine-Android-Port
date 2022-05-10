@@ -4380,10 +4380,13 @@ class PlayState extends MusicBeatState
 						light.visible = false;
 					});
 
-					curLight = FlxG.random.int(0, phillyCityLights.length - 1, [curLight]);
+					if(!stopLights)
+					{
+						curLight = FlxG.random.int(0, phillyCityLights.length - 1, [curLight]);
 
-					phillyCityLights.members[curLight].visible = true;
-					phillyCityLights.members[curLight].alpha = 1;
+						phillyCityLights.members[curLight].visible = true;
+						phillyCityLights.members[curLight].alpha = 1;
+					}
 				}
 
 				if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8)
@@ -4579,6 +4582,7 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
+	var stopLights:Bool = false;
 	var curLight:Int = 0;
 	var curLightEvent:Int = 0;
 }

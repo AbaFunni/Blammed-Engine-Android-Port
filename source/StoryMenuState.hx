@@ -49,6 +49,8 @@ class StoryMenuState extends MusicBeatState
 
 	var loadedWeeks:Array<WeekData> = [];
 
+	var curLight:Int = 0;
+	var blammableObjects:Array<FlxSprite> = [];
 	override function create()
 	{
 		Paths.clearStoredMemory();
