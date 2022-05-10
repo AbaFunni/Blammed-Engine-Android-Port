@@ -77,6 +77,11 @@ class StoryMenuState extends MusicBeatState
 		bgSprite = new FlxSprite(0, 56);
 		bgSprite.antialiasing = ClientPrefs.globalAntialiasing;
 
+		bgYellow.color = TitleState.blammedLightsColors[0];
+		blammableObjects.push(bgYellow);
+		bgSprite.color = TitleState.blammedLightsColors[0];
+		blammableObjects.push(bgSprite);
+
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
 
@@ -133,6 +138,8 @@ class StoryMenuState extends MusicBeatState
 			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, charArray[char]);
 			weekCharacterThing.y += 70;
 			grpWeekCharacters.add(weekCharacterThing);
+			weekCharacterThing.color = TitleState.blammedLightsColors[0];
+			blammableObjects.push(weekCharacterThing);
 		}
 
 		difficultySelectors = new FlxGroup();
@@ -449,6 +456,25 @@ class StoryMenuState extends MusicBeatState
 			curDifficulty = newPos;
 		}
 		updateText();
+	}
+	
+	override function beatHit()
+	{
+		if (curBeat % 4 == 0) 
+		{
+			var randomNum:Int = FlxG.random.int(0, TitleState.blammedLightsColors.length-1, [curLight]);
+			var blamColor:FlxColor = TitleState.blammedLightsColors[randomNum];
+			for (spr in blammableObjects)
+			{
+				spr.color = blamColor;
+			}
+			curLight = randomNum;
+
+			FlxG.camera.zoom = 1.15;
+			FlxTween.tween(FlxG.camera, {zoom: 1}, 0.5, {ease: FlxEase.circOut});
+		}
+
+		super.beatHit();
 	}
 
 	function weekIsLocked(name:String):Bool {
